@@ -87,7 +87,7 @@ class NetworkReceiver:
 
     def start(self, join=False):
         self._t = threading.Thread(target=self._server.serve_forever)
-        self._t.setDaemon(True)  # don't hang on exit
+        self._t.daemon = True  # don't hang on exit
         self._t.start()
         log.info("Listening on %s", self.address)
         if join:

@@ -16,6 +16,22 @@ NUMPY_TYPES = (
 NUMPY_DEFAULTS = (True, 'true', 'True', 'float')
 
 
+class WrappingColorList(numpy.ndarray):
+    """An ndarray whose assignments wrap out-of-range values.
+
+    numpy 2 raises OverflowError when a Python integer outside the dtype's
+    range is assigned, where numpy 1 wrapped it around - so a color like
+    (255, 255, 255) must keep wrapping for small dtypes like int8.
+    """
+
+    def __setitem__(self, key, value):
+        try:
+            super().__setitem__(key, value)
+        except OverflowError:
+            value = numpy.asarray(value).astype(self.dtype, casting='unsafe')
+            super().__setitem__(key, value)
+
+
 class Maker:
     def __init__(self, floating=None, shared_memory=False, numpy_dtype=None):
         if numpy_dtype:
@@ -41,7 +57,14 @@ class Maker:
 
         elif numpy_dtype:
             self.bytes = bytearray
-            self.color_list = lambda size: numpy.zeros((size, 3), numpy_dtype)
+            if numpy.issubdtype(numpy.dtype(numpy_dtype), numpy.integer):
+                # Only integer dtypes can overflow, and the wrapping view
+                # costs a Python-level __setitem__ on every pixel set.
+                self.color_list = lambda size: (
+                    numpy.zeros((size, 3), numpy_dtype).view(WrappingColorList))
+            else:
+                self.color_list = (
+                    lambda size: numpy.zeros((size, 3), numpy_dtype))
 
         else:
             self.bytes = bytearray

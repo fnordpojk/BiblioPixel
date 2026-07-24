@@ -240,7 +240,7 @@ class RemoteControl(wrapper.Indexed):
         if not self.cur_step:
             self.run_animation()
         super().step(amt)
-        while not self.threading.stop_event.isSet():
+        while not self.threading.stop_event.is_set():
             recv = self.q_recv.get()
             req = recv['req']
             if req not in self.handlers:

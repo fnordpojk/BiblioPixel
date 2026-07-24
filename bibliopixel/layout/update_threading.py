@@ -23,7 +23,7 @@ class UpdateDriverThread(runnable.LoopThread):
         self._driver.sync()
 
     def sending(self):
-        return self._wait.isSet()
+        return self._wait.is_set()
 
     def run_once(self):
         self._wait.wait()

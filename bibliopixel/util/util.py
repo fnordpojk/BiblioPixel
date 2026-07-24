@@ -1,4 +1,19 @@
-import math
+import math, re
+
+
+def parse_version(version):
+    """Parse a version string into a tuple of integers for comparison.
+
+    Numeric prefixes are kept and anything after a non-numeric segment is
+    ignored, so '3.5b1' parses as (3, 5).
+    """
+    parts = []
+    for part in str(version).split('.'):
+        match = re.match(r'\d+', part)
+        if not match:
+            break
+        parts.append(int(match.group()))
+    return tuple(parts)
 
 
 def generate_header(cmd, size):

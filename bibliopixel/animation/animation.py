@@ -185,7 +185,7 @@ class Animation(object):
 
             self.threading.wait(sleep_time / self.subframes, timestamps)
 
-        if self.threading.stop_event.isSet():
+        if self.threading.stop_event.is_set():
             self.state = runner.STATE.canceled
         else:
             self.state = self.runner.compute_state(self.cur_step, self.state)
