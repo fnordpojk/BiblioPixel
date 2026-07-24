@@ -1,9 +1,8 @@
 import argparse, serial, serial.tools.list_ports
-from distutils.version import LooseVersion
 from . gamepad import BaseGamePad
 from .. drivers.return_codes import RETURN_CODES, print_error
 from .. util import exception, log
-from .. util.util import generate_header
+from .. util.util import generate_header, parse_version
 
 VERSION_ERROR = """
 pyserial v{} found, please upgrade to v2.7+!
@@ -15,7 +14,7 @@ Unable to connect to the device.
 Please check that it is connected and the correct port is selected.
 """
 
-if LooseVersion(serial.VERSION) < LooseVersion('2.7'):
+if parse_version(serial.VERSION) < parse_version('2.7'):
     error = VERSION_ERROR.format(serial.VERSION)
     log.error(error)
     raise ImportError(error)

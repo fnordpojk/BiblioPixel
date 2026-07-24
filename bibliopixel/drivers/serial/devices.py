@@ -1,5 +1,4 @@
 import serial, serial.tools.list_ports
-from distutils.version import LooseVersion
 from . codes import CMDTYPE, LEDTYPE, SPIChipsets, BufferChipsets
 from . import io
 from ... drivers.return_codes import raise_error

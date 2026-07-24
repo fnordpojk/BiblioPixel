@@ -1,6 +1,6 @@
 from . import load
 from . import fields
-from distutils.version import LooseVersion
+from .. util.util import parse_version
 
 MINIMUM_VERSIONS = {'serial': '2.7'}
 
@@ -20,7 +20,7 @@ def _validate_typename(typename):
 
     version = __import__(root_module).VERSION
 
-    if LooseVersion(version) < LooseVersion(min_version):  # pragma: no cover
+    if parse_version(version) < parse_version(min_version):  # pragma: no cover
         install_name = INSTALL_NAMES.get(root_module, root_module)
         raise ValueError(VERSION_MESSAGE % (
             root_module, version, min_version, install_name))

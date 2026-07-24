@@ -40,7 +40,7 @@ class Receiver(Animation):
 
     def start(self):
         self._t = threading.Thread(target=self._recv_thread_obj)
-        self._t.setDaemon(True)  # don't hang on exit
+        self._t.daemon = True  # don't hang on exit
         self._t.start()
         log.info("Receiver Listening on %s", self.address)
 
@@ -62,7 +62,7 @@ class Receiver(Animation):
         Instead, receive the data on the receive thread and set it on the buffer
         then call self._hold_for_data.set()
         """
-        if not self._stop_event.isSet():
+        if not self._stop_event.is_set():
             self._hold_for_data.wait()
             self._hold_for_data.clear()
 
